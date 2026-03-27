@@ -1,7 +1,4 @@
 import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
-import fs from "fs";
-import path from "path";
 
 export default function Story({ images, texts, storyName }) {
   const [page, setPage] = useState(0);
@@ -47,6 +44,9 @@ export default function Story({ images, texts, storyName }) {
 }
 
 export async function getStaticPaths() {
+  const fs = require("fs");
+  const path = require("path");
+
   const storiesDir = path.join(process.cwd(), "public/stories");
   const storyNames = fs.readdirSync(storiesDir).filter(f => fs.statSync(path.join(storiesDir,f)).isDirectory());
   const paths = storyNames.map(name => ({ params: { storyName: name }}));
@@ -54,6 +54,9 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
+  const fs = require("fs");
+  const path = require("path");
+
   const storyDir = path.join(process.cwd(), "public/stories", params.storyName);
   const files = fs.readdirSync(storyDir).filter(f => f.endsWith(".png")).sort();
   const images = files.map(f => `/stories/${params.storyName}/${f}`);
